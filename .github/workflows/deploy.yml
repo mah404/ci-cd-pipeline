@@ -40,6 +40,6 @@ jobs:
             docker run -d \
               --name my-app \
               --restart unless-stopped \
-              -p 3000:3000 \
+              -p 8000:3000 \
               mahtabvariyani/ci-cd-pipeline:latest
             echo "Deployed successfully!"
