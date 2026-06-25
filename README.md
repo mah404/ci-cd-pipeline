@@ -114,7 +114,7 @@ ci-cd-pipeline/
 
 ---
 
-## 📈 What I Learned Building This
+## 📈 
 
 - Containerizing applications with Docker
 - Writing CI/CD pipelines with GitHub Actions
@@ -125,4 +125,4 @@ ci-cd-pipeline/
 
 ---
 
-*Built as a DevOps portfolio project — from zero to a live, auto-deploying, monitored application.*
+*Built a DevOps project — from zero to a live, auto-deploying, monitored application.*
