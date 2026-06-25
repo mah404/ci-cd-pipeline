@@ -1,8 +1,25 @@
-# 🚀 CI/CD Pipeline — Live on the Internet
+# 🚀 CI/CD Pipeline — Live on the Internet with HTTPS
 
-> A complete DevOps project: containerized Node.js app with automated CI/CD, deployed to a real server, with live monitoring.
+> A complete production-grade DevOps project: containerized Node.js app with automated CI/CD, deployed to a real server, secured with SSL, and monitored with Prometheus + Grafana.
 
-🌍 **Live at:** [http://servercicdpoplines.duckdns.org:8000](http://servercicdpoplines.duckdns.org:8000)
+🌍 **Live at:** [https://servercicdpoplines.duckdns.org](https://servercicdpoplines.duckdns.org)
+🔒 **Fully secured with SSL certificate from Let's Encrypt**
+
+---
+
+## ✅ What Makes This Production-Grade
+
+| Feature | Status |
+|---------|--------|
+| Containerized with Docker | ✅ |
+| Automated CI/CD on every push | ✅ |
+| Deployed to real server (Hetzner VPS) | ✅ |
+| Custom domain (DuckDNS) | ✅ |
+| HTTPS with SSL certificate | ✅ 🔒 |
+| Nginx reverse proxy | ✅ |
+| Auto HTTP → HTTPS redirect | ✅ |
+| Auto SSL renewal (Let's Encrypt) | ✅ |
+| Live monitoring (Prometheus + Grafana) | ✅ |
 
 ---
 
@@ -12,43 +29,67 @@
 |------|---------|
 | Node.js + Express | Web application |
 | Docker | Containerization |
-| GitHub Actions | CI/CD automation — auto deploys on every push |
+| GitHub Actions | CI/CD — auto deploys on every git push |
 | Docker Hub | Docker image registry |
-| Hetzner CX23 | Real Ubuntu server (2 vCPU, 4GB RAM) |
+| Hetzner CX23 | Real Ubuntu VPS (2 vCPU, 4GB RAM) |
 | DuckDNS | Free domain pointing to server |
-| Prometheus | Metrics collection every 15s |
+| Nginx | Reverse proxy + SSL termination |
+| Let's Encrypt + Certbot | Free SSL certificate with auto-renewal |
+| Prometheus | Metrics collection every 15 seconds |
 | Grafana | Live monitoring dashboards |
 
 ---
 
 ## ⚙️ How the CI/CD Pipeline Works
 
-Every time you push code to the `main` branch, this happens **automatically**:
+Every time you push code to `main`, this happens **automatically**:
 
 ```
 git push
     │
     ▼
-GitHub detects push
+GitHub detects the push
     │
     ▼
-GitHub Actions spins up a Linux runner
+GitHub Actions runs automatically:
     │
     ├─ Job 1: build-and-push
-    │     • Checks out code
-    │     • Logs into Docker Hub
-    │     • Builds Docker image
-    │     • Pushes image to Docker Hub
+    │     ✔ Checkout code
+    │     ✔ Login to Docker Hub
+    │     ✔ Build Docker image
+    │     ✔ Push image to Docker Hub
     │
     └─ Job 2: deploy
-          • SSHs into Hetzner server
-          • Pulls latest Docker image
-          • Stops old container
-          • Starts new container
-          • App is live ✅
+          ✔ SSH into Hetzner server
+          ✔ Pull latest Docker image
+          ✔ Stop old container
+          ✔ Start new container
+          ✔ App live at https://servercicdpoplines.duckdns.org
 ```
 
-Zero manual work. One push = live update.
+Zero manual work. One push = live update in under 2 minutes.
+
+---
+
+## 🔒 HTTPS Architecture
+
+```
+Browser (HTTPS request)
+        │
+        ▼
+Nginx (port 443) — handles SSL encryption
+        │
+        │ forwards internally
+        ▼
+Docker container (port 8000) — your app
+        │
+        ▼
+Response encrypted and sent back to browser
+```
+
+- All traffic is encrypted end-to-end
+- HTTP requests automatically redirect to HTTPS
+- SSL certificate auto-renews every 90 days via Certbot
 
 ---
 
@@ -75,10 +116,10 @@ cd monitoring
 docker compose -f docker-compose.monitoring.yml up -d
 ```
 
-| Dashboard | URL |
-|-----------|-----|
-| Prometheus | http://localhost:9090 |
-| Grafana | http://localhost:3002 |
+| Dashboard | URL | Login |
+|-----------|-----|-------|
+| Prometheus | http://localhost:9090 | — |
+| Grafana | http://localhost:3002 | admin / admin123 |
 
 Import Grafana dashboard ID **1860** for live CPU, RAM, disk metrics.
 
@@ -90,13 +131,13 @@ Import Grafana dashboard ID **1860** for live CPU, RAM, disk metrics.
 ci-cd-pipeline/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml          # CI/CD pipeline config
+│       └── deploy.yml              # CI/CD pipeline — auto build & deploy
 ├── monitoring/
-│   ├── prometheus.yml          # Prometheus scrape config
+│   ├── prometheus.yml              # Prometheus scrape config
 │   └── docker-compose.monitoring.yml
-├── Dockerfile                  # Container build recipe
-├── server.js                   # Node.js web app
-├── package.json                # Dependencies
+├── Dockerfile                      # Container build recipe
+├── server.js                       # Node.js web app
+├── package.json                    # Dependencies
 └── .gitignore
 ```
 
@@ -109,20 +150,37 @@ ci-cd-pipeline/
 | `DOCKERHUB_USERNAME` | Docker Hub login |
 | `DOCKERHUB_TOKEN` | Docker Hub access token |
 | `SERVER_HOST` | Server IP address |
-| `SERVER_USER` | SSH username (root) |
-| `SERVER_SSH_KEY` | Private SSH key for deployment |
+| `SERVER_USER` | SSH username |
+| `SERVER_SSH_KEY` | Private SSH key for automated deployment |
+
+---
+
+## 🌍 Server Setup
+
+| Spec | Value |
+|------|-------|
+| Provider | Hetzner Cloud |
+| Type | CX23 |
+| OS | Ubuntu 24 LTS |
+| CPU | 2 vCPU |
+| RAM | 4 GB |
+| Domain | servercicdpoplines.duckdns.org |
+| SSL | Let's Encrypt (auto-renewing) |
+| Reverse Proxy | Nginx |
 
 ---
 
 ## 📈 
 
 - Containerizing applications with Docker
-- Writing CI/CD pipelines with GitHub Actions
-- Deploying to a real Linux server via SSH automation
+- Writing multi-job CI/CD pipelines with GitHub Actions
+- Deploying to a real Linux server via automated SSH
+- Setting up Nginx as a reverse proxy
+- Securing a server with free SSL (Let's Encrypt + Certbot)
+- Configuring automatic HTTP → HTTPS redirects
 - Setting up infrastructure monitoring with Prometheus & Grafana
-- Managing secrets securely in GitHub
-- Using DuckDNS for free domain mapping
+- Managing secrets securely in GitHub Actions
 
 ---
 
-*Built a DevOps project — from zero to a live, auto-deploying, monitored application.*
+*DevOps project — from zero to a live, auto-deploying, SSL-secured, monitored application.*
