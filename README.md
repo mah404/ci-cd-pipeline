@@ -2,8 +2,10 @@
 
 > A complete production-grade DevOps project: containerized Node.js app with automated CI/CD, deployed to a real server, secured with SSL, and monitored with Prometheus + Grafana.
 
-🌍 **Live at:** [https://servercicdpoplines.duckdns.org](https://servercicdpoplines.duckdns.org)
+🌍 ** Live at:** [https://servercicdpoplines.duckdns.org](https://servercicdpoplines.duckdns.org)
+
 🔒 **Fully secured with SSL certificate from Let's Encrypt**
+
 
 ---
 
